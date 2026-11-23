@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders | PRIYA Stylekart</title>
+    <link rel="stylesheet" href="orders.css">
+    <link rel="stylesheet" href="site-theme.css">
+</head>
+<body>
+    <header class="orders-header">
+        <a class="orders-brand" href="index.html">PRIYA STYLEKART</a>
+        <nav aria-label="Main navigation">
+            <a href="index.html">Home</a>
+            <a href="products.html">Products</a>
+            <a href="cart.html">Cart</a>
+            <a href="orders.html" class="active" aria-current="page">My Orders</a>
+        </nav>
+    </header>
+
+    <main class="orders-main">
+        <section class="orders-intro">
+            <p>Purchase history</p>
+            <h1>My Orders</h1>
+            <label class="orders-search">
+                <span>Search orders</span>
+                <input id="order-search" type="search" placeholder="Order ID, customer or product" autocomplete="off">
+            </label>
+            <p id="orders-count" class="orders-count" aria-live="polite"></p>
+        </section>
+
+        <section id="orders-list" class="orders-list" aria-label="Your orders"></section>
+    </main>
+
+    <footer class="orders-footer">© 2026 PRIYA Stylekart</footer>
+
+    <script src="store.js"></script>
+    <script>
+        const ordersList = document.querySelector('#orders-list');
+        const ordersSearch = document.querySelector('#order-search');
+        const ordersCount = document.querySelector('#orders-count');
+
+        function productRating(productName, reviews) {
+            const matching = reviews.filter(review =>
+                review.product && review.product.toLowerCase() === productName.toLowerCase()
+            );
+            if (!matching.length) return null;
+            const average = matching.reduce((sum, review) => sum + Number(review.rating || 0), 0) / matching.length;
+            return { average, count: matching.length };
+        }
+
+        function addText(parent, tagName, className, text) {
+            const element = document.createElement(tagName);
+            if (className) element.className = className;
+            element.textContent = text;
+            parent.append(element);
+            return element;
+        }
+
+        function renderOrders() {
+            const query = ordersSearch.value.trim().toLowerCase();
+            const orders = StylekartStore.readOrders();
+            const reviews = StylekartStore.readReviews();
+            const filtered = orders.filter(order => {
+                const searchable = [
+                    order.orderId,
+                    order.status,
+                    order.customerName,
+                    order.customer && order.customer.name,
+                    ...(order.items || []).map(item => item.name)
+                ].filter(Boolean).join(' ').toLowerCase();
+                return searchable.includes(query);
+            });
+
+            ordersList.replaceChildren();
+            ordersCount.textContent = `${filtered.length} ${filtered.length === 1 ? 'order' : 'orders'}`;
+
+            if (!filtered.length) {
+                const empty = document.createElement('div');
+                empty.className = 'orders-empty';
+                empty.textContent = orders.length
+                    ? 'No orders match your search.'
+                    : 'No orders yet. Your completed purchases will appear here.';
+                ordersList.append(empty);
+                return;
+            }
+
+            filtered.forEach(order => {
+                const card = document.createElement('article');
+                card.className = 'order-card';
+
+                const header = document.createElement('div');
+                header.className = 'order-card-header';
+                const identity = document.createElement('div');
+                addText(identity, 'h2', '', order.orderId || 'Order');
+                addText(identity, 'p', 'order-date', order.createdAt
+                    ? new Date(order.createdAt).toLocaleString()
+                    : (order.orderDate || 'Date unavailable'));
+                const status = document.createElement('span');
+                status.className = 'order-status';
+                status.textContent = order.status || 'Order placed';
+                header.append(identity, status);
+
+                const items = document.createElement('div');
+                items.className = 'ordered-products';
+                (order.items || []).forEach(item => {
+                    const row = document.createElement('div');
+                    row.className = 'ordered-product';
+                    if (item.image) {
+                        const image = document.createElement('img');
+                        image.src = item.image;
+                        image.alt = item.name || 'Ordered product';
+                        image.loading = 'lazy';
+                        row.append(image);
+                    }
+
+                    const details = document.createElement('div');
+                    details.className = 'ordered-product-details';
+                    addText(details, 'h3', '', item.name || 'Product');
+                    addText(details, 'p', 'ordered-quantity', `Quantity: ${item.quantity || 1}`);
+                    const rating = productRating(item.name || '', reviews);
+                    const ratingLine = document.createElement('p');
+                    ratingLine.className = rating ? 'product-rating' : 'product-rating unrated';
+                    if (rating) {
+                        const stars = document.createElement('span');
+                        stars.className = 'stars';
+                        stars.textContent = `${'★'.repeat(Math.round(rating.average))}${'☆'.repeat(5 - Math.round(rating.average))}`;
+                        ratingLine.append(stars, document.createTextNode(` ${rating.average.toFixed(1)} / 5 (${rating.count} ${rating.count === 1 ? 'rating' : 'ratings'})`));
+                    } else {
+                        ratingLine.textContent = 'Not rated yet';
+                    }
+                    details.append(ratingLine);
+                    addText(details, 'p', 'ordered-price', `₹${(Number(item.price) * Number(item.quantity || 1)).toLocaleString('en-IN')}`);
+                    row.append(details);
+                    items.append(row);
+                });
+
+                const footer = document.createElement('div');
+                footer.className = 'order-card-footer';
+                addText(footer, 'span', '', `Payment: ${(order.customer && order.customer.paymentMethod) || order.paymentMethod || 'Not specified'}`);
+                const totalValue = typeof order.total === 'number' ? order.total : Number(String(order.total || 0).replace(/[^0-9.]/g, ''));
+                addText(footer, 'strong', '', `Total: ₹${totalValue.toLocaleString('en-IN')}`);
+
+                card.append(header, items, footer);
+                ordersList.append(card);
+            });
+        }
+
+        ordersSearch.addEventListener('input', renderOrders);
+        renderOrders();
+    </script>
+</body>
+</html>

@@ -1,0 +1,233 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --ink: #2d2528;
+    --rose: #b03a5b;
+    --blush: #f8e8e6;
+    --cream: #fffaf5;
+}
+
+body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.site-header {
+    align-items: center;
+    background: #fff;
+    box-shadow: 0 2px 14px rgba(45, 37, 40, .1);
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 6%;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+.brand {
+    align-items: center;
+    display: flex;
+    gap: 12px;
+}
+
+.brand img {
+    border-radius: 50%;
+    height: 48px;
+    object-fit: cover;
+    width: 48px;
+}
+
+.brand strong {
+    font-size: 18px;
+    letter-spacing: 1.5px;
+}
+
+.site-nav {
+    display: flex;
+    gap: 24px;
+}
+
+.site-nav a {
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.site-nav a:hover,
+.site-nav a.active {
+    color: var(--rose);
+}
+
+.category-hero {
+    align-items: center;
+    background-position: center;
+    background-size: cover;
+    display: flex;
+    min-height: 390px;
+    padding: 60px 8%;
+}
+
+.bags-hero {
+    background-image: linear-gradient(90deg, rgba(35, 24, 24, .7), rgba(35, 24, 24, .08)), url('https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=1600&q=85');
+}
+
+.sarees-hero {
+    background-image: linear-gradient(90deg, rgba(35, 24, 24, .7), rgba(35, 24, 24, .08)), url('https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=1600&q=85');
+}
+
+.category-hero-content {
+    color: #fff;
+    max-width: 560px;
+}
+
+.category-hero-content p:first-child {
+    color: #ffd9c8;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.category-hero h1 {
+    font-size: clamp(42px, 6vw, 72px);
+    line-height: 1;
+    margin: 16px 0;
+}
+
+.category-hero .intro {
+    font-size: 19px;
+    line-height: 1.6;
+    max-width: 470px;
+}
+
+.collection {
+    padding: 64px 6%;
+}
+
+.collection-heading {
+    align-items: end;
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto 30px;
+    max-width: 1200px;
+}
+
+.collection-heading h2 {
+    font-size: 34px;
+}
+
+.collection-heading p {
+    color: #75666a;
+    max-width: 360px;
+    text-align: right;
+}
+
+.product-grid {
+    display: grid;
+    gap: 28px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: auto;
+    max-width: 1200px;
+}
+
+.product-card {
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(45, 37, 40, .1);
+    padding-bottom: 20px;
+}
+
+.product-card img {
+    display: block;
+    height: 310px;
+    object-fit: cover;
+    width: 100%;
+}
+
+.product-card h3,
+.product-card p {
+    padding: 0 18px;
+}
+
+.product-card h3 {
+    font-size: 19px;
+    margin-top: 18px;
+}
+
+.product-card .description {
+    color: #75666a;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-top: 8px;
+}
+
+.price {
+    color: var(--rose);
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 12px;
+}
+
+.shop-link {
+    border: 1px solid var(--rose);
+    color: var(--rose);
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 700;
+    margin: 16px 18px 0;
+    padding: 11px 16px;
+    text-decoration: none;
+}
+
+.shop-link:hover {
+    background: var(--rose);
+    color: #fff;
+}
+
+.site-footer {
+    background: #2d2528;
+    color: #fff;
+    padding: 24px;
+    text-align: center;
+}
+
+@media (max-width: 800px) {
+    .site-header,
+    .collection-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .site-nav {
+        flex-wrap: wrap;
+        gap: 14px;
+    }
+
+    .collection-heading p {
+        text-align: left;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 520px) {
+    .category-hero {
+        min-height: 340px;
+    }
+
+    .product-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .product-card img {
+        height: 330px;
+    }
+}

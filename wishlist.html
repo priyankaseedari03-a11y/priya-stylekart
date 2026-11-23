@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist | PRIYA Stylekart</title>
+    <link rel="stylesheet" href="wishlist-page.css">
+    <link rel="stylesheet" href="site-theme.css">
+</head>
+<body>
+    <header class="site-header">
+        <a class="brand" href="index.html">PRIYA STYLEKART</a>
+        <nav aria-label="Main navigation">
+            <a href="index.html">Home</a>
+            <a href="products.html">Products</a>
+            <a href="cart.html">Cart</a>
+            <a href="orders.html">My Orders</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="page-heading">
+            <p>Saved for later</p>
+            <h1>My Wishlist</h1>
+            <span id="wishlist-count" aria-live="polite"></span>
+        </section>
+        <section id="wishlist-items" class="wishlist-grid" aria-label="Saved products"></section>
+    </main>
+
+    <footer>© 2026 PRIYA Stylekart</footer>
+
+    <script src="store.js"></script>
+    <script>
+        const list = document.querySelector('#wishlist-items');
+        const count = document.querySelector('#wishlist-count');
+
+        function renderWishlist() {
+            const items = StylekartStore.readWishlist();
+            list.replaceChildren();
+            count.textContent = `${items.length} saved ${items.length === 1 ? 'item' : 'items'}`;
+
+            if (!items.length) {
+                const empty = document.createElement('p');
+                empty.className = 'empty-state';
+                empty.textContent = 'Your wishlist is empty. Save a product with the heart button and it will stay here.';
+                list.append(empty);
+                return;
+            }
+
+            items.forEach((item, index) => {
+                const card = document.createElement('article');
+                card.className = 'wishlist-card';
+
+                const image = document.createElement('img');
+                image.src = item.image;
+                image.alt = item.name;
+                image.loading = 'lazy';
+
+                const details = document.createElement('div');
+                details.className = 'product-details';
+                const title = document.createElement('h2');
+                title.textContent = item.name;
+                const price = document.createElement('p');
+                price.className = 'price';
+                price.textContent = `₹${Number(item.price).toLocaleString('en-IN')}`;
+
+                const actions = document.createElement('div');
+                actions.className = 'product-actions';
+                const addButton = document.createElement('button');
+                addButton.type = 'button';
+                addButton.textContent = 'Add to Cart';
+                addButton.addEventListener('click', () => {
+                    const cart = StylekartStore.readCart();
+                    const existing = cart.find(cartItem => cartItem.name === item.name);
+                    if (existing) {
+                        existing.quantity = (existing.quantity || 1) + 1;
+                    } else {
+                        cart.push({ ...item, quantity: 1 });
+                    }
+                    StylekartStore.saveCart(cart);
+                    window.location.href = 'cart.html';
+                });
+
+                const removeButton = document.createElement('button');
+                removeButton.type = 'button';
+                removeButton.className = 'remove-button';
+                removeButton.textContent = 'Remove';
+                removeButton.addEventListener('click', () => {
+                    const updated = StylekartStore.readWishlist();
+                    updated.splice(index, 1);
+                    StylekartStore.saveWishlist(updated);
+                    renderWishlist();
+                });
+
+                actions.append(addButton, removeButton);
+                details.append(title, price, actions);
+                card.append(image, details);
+                list.append(card);
+            });
+        }
+
+        renderWishlist();
+    </script>
+</body>
+</html>

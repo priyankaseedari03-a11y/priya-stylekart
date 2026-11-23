@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>PRIYA Fancy Store - Checkout</title>
+
+    <link rel="stylesheet" href="checkout.css">
+    <link rel="stylesheet" href="site-theme.css">
+    <link rel="stylesheet" href="orders.css">
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="logo">PRIYA</div>
+
+    <h2>Checkout</h2>
+
+    <nav><a href="orders.html">My Orders</a></nav>
+
+</header>
+
+
+<main class="checkout-container">
+
+
+    <!-- ORDER ITEMS -->
+
+    <section class="checkout-box">
+
+        <h2>Your Order</h2>
+
+        <div id="checkout-items"></div>
+
+        <h3 class="total">
+            Total: ₹<span id="checkout-total">0</span>
+        </h3>
+
+    </section>
+
+
+
+    <!-- CUSTOMER DETAILS -->
+
+    <section class="checkout-box">
+
+        <h2>Customer Details</h2>
+
+
+        <form id="checkout-form">
+
+
+            <label>
+                Full Name
+            </label>
+
+            <input
+                type="text"
+                id="name"
+                placeholder="Enter your name"
+                required
+            >
+
+
+            <label>
+                Mobile Number
+            </label>
+
+            <input
+                type="tel"
+                id="phone"
+                placeholder="Enter mobile number"
+                required
+            >
+
+
+            <label>
+                Email
+            </label>
+
+            <input
+                type="email"
+                id="email"
+                placeholder="Enter email"
+                required
+            >
+
+
+            <label>
+                Delivery Address
+            </label>
+
+            <textarea
+                id="address"
+                placeholder="Enter complete address"
+                required></textarea>
+
+
+            <!-- PAYMENT -->
+
+            <h2>Payment Method</h2>
+
+            <div class="payment-options-grid">
+
+                <label class="payment-card" id="card-gpay">
+                    <input
+                        type="radio"
+                        name="payment"
+                        value="GPay"
+                        required
+                    >
+                    <div class="payment-card-content">
+                        <span class="payment-icon gpay-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+                                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+                            </svg>
+                        </span>
+                        <div class="payment-info">
+                            <strong>Google Pay</strong>
+                            <small>Instant UPI QR scan & pay</small>
+                        </div>
+                        <span class="upi-tag">UPI</span>
+                    </div>
+                </label>
+
+                <label class="payment-card" id="card-phonepe">
+                    <input
+                        type="radio"
+                        name="payment"
+                        value="PhonePe"
+                    >
+                    <div class="payment-card-content">
+                        <span class="payment-icon phonepe-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="12" r="11" fill="#5F259F"/>
+                                <path d="M13.5 6.5h-3.2c-.3 0-.5.2-.5.5v10c0 .3.2.5.5.5h1.8c.3 0 .5-.2.5-.5v-3.3h.9c2.3 0 3.9-1.5 3.9-3.6s-1.6-3.6-3.9-3.6zm-.2 4.9h-1.5V8.8h1.5c1.1 0 1.9.6 1.9 1.3s-.8 1.3-1.9 1.3z" fill="#FFFFFF"/>
+                            </svg>
+                        </span>
+                        <div class="payment-info">
+                            <strong>PhonePe</strong>
+                            <small>Fast & secure UPI payment</small>
+                        </div>
+                        <span class="upi-tag">UPI</span>
+                    </div>
+                </label>
+
+                <label class="payment-card" id="card-cod">
+                    <input
+                        type="radio"
+                        name="payment"
+                        value="Cash on Delivery"
+                    >
+                    <div class="payment-card-content">
+                        <span class="payment-icon cod-icon">💵</span>
+                        <div class="payment-info">
+                            <strong>Cash on Delivery</strong>
+                            <small>Pay with cash when package arrives</small>
+                        </div>
+                    </div>
+                </label>
+
+            </div>
+
+            <!-- UPI QR CODE SECTION -->
+            <div id="upi-qr-section" class="upi-qr-section" style="display: none;">
+                <div class="upi-qr-card">
+                    <div class="upi-qr-header">
+                        <div class="upi-badge">
+                            <span class="upi-badge-pulse"></span>
+                            <span id="selected-upi-app-name">Scan & Pay via UPI</span>
+                        </div>
+                        <span class="upi-secure-badge">🔒 100% Secure</span>
+                    </div>
+
+                    <div class="upi-amount-pill">
+                        <span>Payable Amount</span>
+                        <strong class="upi-amount-val">₹<span id="qr-total-amount">0</span></strong>
+                    </div>
+
+                    <div class="qr-container">
+                        <button
+                            type="button"
+                            class="upi-qr-trigger"
+                            id="upi-qr-trigger"
+                            aria-label="Show UPI payment details"
+                            aria-expanded="false"
+                            aria-controls="upi-payment-details"
+                        >
+                            <img
+                                src="priya-stylekart-qr.jpg"
+                                alt="Priya Stylekart UPI QR Code"
+                                class="upi-qr-image"
+                                id="upi-qr-img"
+                            >
+                        </button>
+                        <div class="qr-payee-banner">
+                            <span>Pay to: <strong>Priya Stylekart</strong></span>
+                        </div>
+                    </div>
+
+                    <div id="upi-payment-details" class="upi-payment-details" hidden>
+                        <h3>Payment details</h3>
+                        <p class="upi-payment-total">
+                            Total to pay: <strong>₹<span id="upi-details-amount">0</span></strong>
+                        </p>
+                        <p>
+                            In <strong id="upi-details-app-name">your UPI app</strong>, choose the
+                            bank account you want to pay from, then approve the payment there.
+                        </p>
+                        <p class="upi-security-note">
+                            Enter your UPI PIN only in your UPI app. This store will never ask for
+                            or save your PIN or bank password.
+                        </p>
+                    </div>
+
+                    <div class="upi-steps">
+                        <div class="upi-step-item">
+                            <span class="step-num">1</span>
+                            <span>Open <strong id="qr-step-app-name">Google Pay</strong> or any UPI app</span>
+                        </div>
+                        <div class="upi-step-item">
+                            <span class="step-num">2</span>
+                            <span>Scan the QR code above & pay <strong>₹<span id="qr-step-amount">0</span></strong></span>
+                        </div>
+                        <div class="upi-step-item">
+                            <span class="step-num">3</span>
+                            <span>Click <strong>"Confirm & Place Order"</strong> below</span>
+                        </div>
+                    </div>
+
+                    <div class="upi-utr-group">
+                        <label for="upi-utr-input">
+                            UPI Reference / UTR Number <small class="text-muted">(Optional)</small>
+                        </label>
+                        <input
+                            type="text"
+                            id="upi-utr-input"
+                            placeholder="Enter 12-digit UTR from payment receipt"
+                            maxlength="22"
+                        >
+                    </div>
+                </div>
+            </div>
+
+
+            <button
+                type="submit"
+                id="place-order-btn"
+                class="place-order">
+
+                Place Order
+
+            </button>
+
+
+        </form>
+
+    </section>
+
+
+</main>
+
+
+<!-- THANK YOU -->
+
+<div
+    id="thank-you"
+    class="thank-you">
+
+    <div class="thank-box">
+
+        <div class="thank-check-icon">✓</div>
+
+        <h1>🎉 Order Confirmed!</h1>
+
+        <p class="thank-subtitle">Your order has been placed successfully.</p>
+
+        <div class="thank-order-card">
+            <div class="thank-row">
+                <span>Order ID:</span>
+                <strong id="thank-order-id">ORD-000000</strong>
+            </div>
+            <div class="thank-row">
+                <span>Customer:</span>
+                <span id="thank-customer-name">-</span>
+            </div>
+            <div class="thank-row">
+                <span>Contact:</span>
+                <span id="thank-customer-phone">-</span>
+            </div>
+            <div class="thank-row">
+                <span>Delivery To:</span>
+                <span id="thank-customer-address">-</span>
+            </div>
+            <div class="thank-row">
+                <span>Payment Method:</span>
+                <strong id="thank-payment-method">-</strong>
+            </div>
+            <div class="thank-row thank-total-row">
+                <span>Total Amount:</span>
+                <strong class="thank-total-highlight">₹<span id="thank-total-amount">0</span></strong>
+            </div>
+        </div>
+
+        <!-- QR RECEIPT SECTION FOR UPI PAYMENTS -->
+        <div id="thank-qr-section" class="thank-qr-section" style="display: none;">
+            <button type="button" class="view-qr-toggle-btn" id="toggle-qr-btn" onclick="toggleThankQR()">
+                📱 View Payment QR Code
+            </button>
+            <div id="thank-qr-drawer" class="thank-qr-drawer" style="display: none;">
+                <p class="qr-drawer-title">Paid to: <strong>Priya Stylekart</strong></p>
+                <img src="priya-stylekart-qr.jpg" alt="Priya Stylekart QR Receipt" class="thank-qr-thumb">
+                <p class="qr-drawer-caption">UPI QR Payment to Priya Stylekart</p>
+            </div>
+        </div>
+
+        <p class="thank-delivery-note">
+            Thank you for shopping with <strong>PRIYA Stylekart</strong>! We are preparing your order.
+        </p>
+
+        <div class="thank-actions">
+            <a href="orders.html" class="orders-btn">
+                View My Orders
+            </a>
+            <button onclick="goHome()" class="home-btn">
+                Continue Shopping
+            </button>
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="store.js"></script>
+<script src="checkout.js"></script>
+
+</body>
+
+</html>
